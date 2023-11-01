@@ -3,8 +3,6 @@
 namespace App\Entity;
 
 use App\Repository\TaskRepository;
-use Doctrine\Common\Collections\ArrayCollection;
-use Doctrine\Common\Collections\Collection;
 use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
 
@@ -19,6 +17,9 @@ class Task
     #[ORM\Column]
     private ?\DateTimeImmutable $createdAt = null;
 
+    #[ORM\Column]
+    private ?\DateTimeImmutable $updateAt = null;
+
     #[ORM\Column(length: 255)]
     private ?string $title = null;
 
@@ -30,7 +31,6 @@ class Task
 
     #[ORM\ManyToOne(inversedBy: 'tasks')]
     private ?User $user = null;
-
 
     public function getId(): ?int
     {
@@ -45,6 +45,18 @@ class Task
     public function setCreatedAt(\DateTimeImmutable $createdAt): static
     {
         $this->createdAt = $createdAt;
+
+        return $this;
+    }
+
+    public function getUpdateAt(): ?\DateTimeImmutable
+    {
+        return $this->updateAt;
+    }
+
+    public function setUpdateAt(\DateTimeImmutable $updateAt): static
+    {
+        $this->updateAt = $updateAt;
 
         return $this;
     }

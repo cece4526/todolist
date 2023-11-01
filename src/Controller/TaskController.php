@@ -14,15 +14,16 @@ use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\String\Slugger\SluggerInterface;
 
+#[Route('/tasks')]
 class TaskController extends AbstractController
 {
-    #[Route('/tasks', name: 'app_task')]
+    #[Route('/', name: 'task_list')]
     public function index(TaskService $taskService): Response
     {
         return $this->render('Tasks/list.html.twig',['tasks'=> $taskService->getPaginatedTasks()]);
     }
 
-    #[Route('/tasks/new', name: 'task_create', methods: ['GET', 'POST'])]
+    #[Route('/new', name: 'task_create', methods: ['GET', 'POST'])]
     public function new(Request $request, TaskRepository $taskRepository,EntityManagerInterface $em, SluggerInterface $slugger): Response
     {
 
@@ -62,5 +63,25 @@ class TaskController extends AbstractController
             'task' => $task,
             'form' => $form->createView()
         ]);
+    }
+
+    
+    #[Route('/{id}/toggle', name: 'task_toggle')]
+    public function toggleTaskAction(Task $task, EntityManagerInterface $em)
+    {
+        $task->setIsDone(!$task->isIsDone());
+        $em->flush($task);
+
+        $this->addFlash('success', sprintf('La tâche %s a bien été marquée comme faite.', $task->getTitle()));
+
+        return $this->redirectToRoute('task_list');
+    }
+
+    #[Route('/delete/{id}', name: 'task_delete')]
+    public function delete( Task $task, TaskRepository $taskRepository): Response
+    {
+        // $this->denyAccessUnlessGranted('TRICK_DELETE', $trick);
+        $taskRepository->remove($task, true);
+        return $this->redirectToRoute('task_list', [], Response::HTTP_SEE_OTHER);
     }
 }
