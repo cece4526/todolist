@@ -3,7 +3,9 @@
 namespace App\Repository;
 
 use App\Entity\Task;
+use App\Entity\User;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
+use Doctrine\ORM\Query;
 use Doctrine\Persistence\ManagerRegistry;
 
 /**
@@ -28,6 +30,19 @@ class TaskRepository extends ServiceEntityRepository
         if ($flush) {
             $this->getEntityManager()->flush();
         }
+    }
+
+    public function findForPagination(?User $user = null): Query
+    {
+        $qb = $this->createQueryBuilder('t')
+        ->orderBy('t.id','DESC');
+        
+        if ($user) {
+            $qb->leftJoin('t.user','u')
+                ->where($qb->expr()->eq('u.id',':userId'))
+                ->setParameter('userId', $user->getId());
+        }
+        return $qb->getQuery();
     }
 
 //    /**

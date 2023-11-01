@@ -5,10 +5,10 @@ namespace App\Controller;
 use App\Entity\Task;
 use App\Form\TaskType;
 use App\Repository\TaskRepository;
+use App\Service\TaskService;
 use DateTimeImmutable;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
-use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
@@ -17,12 +17,9 @@ use Symfony\Component\String\Slugger\SluggerInterface;
 class TaskController extends AbstractController
 {
     #[Route('/tasks', name: 'app_task')]
-    public function index(): JsonResponse
+    public function index(TaskService $taskService): Response
     {
-        return $this->json([
-            'message' => 'Welcome to your new controller!',
-            'path' => 'src/Controller/TaskController.php',
-        ]);
+        return $this->render('Tasks/list.html.twig',['tasks'=> $taskService->getPaginatedTasks()]);
     }
 
     #[Route('/tasks/new', name: 'task_create', methods: ['GET', 'POST'])]
