@@ -65,6 +65,50 @@ class TaskController extends AbstractController
         ]);
     }
 
+    #[Route('/edition/{id}', name: 'task_edit', methods: ['GET', 'POST'])]
+    public function edit(Request $request, TaskRepository $taskRepository,EntityManagerInterface $em): Response
+    {
+        $task = new Task;
+        $taskId = $request->attributes->get('id');
+        $task = $taskRepository->findTaskWithUserAndCategory($taskId);
+
+
+        // $this->denyAccessUnlessGranted('task_EDIT', $task);
+        //I create my form for edit task
+        $form = $this->createForm(TaskType::class, $task);
+        $user = $this->getUser();
+        //the form request is processed
+        $form->handleRequest($request);
+
+        // if ($user === null) {
+            
+        //     $this->addFlash('danger', 'Veuillez vous connecter pour modifier une tache');
+        //     return $this->redirectToRoute('app_home', [], Response::HTTP_SEE_OTHER);
+        // }
+        //I check if I have a form and that it is valid
+        if ($form->isSubmitted() && $form->isValid()) {
+            $now = new DateTimeImmutable();
+            $task->setUpdateAt($now);
+            $task->setTitle(strtoupper($task->getTitle()));
+            $task->setUser($user);
+            
+            $em->persist($task);
+            $em->flush();
+
+            $taskRepository->save($task, true);
+            $this->addFlash(
+                'success',
+                'La tache a bien été enregistré'
+            );
+
+            return $this->redirectToRoute('task_list', [], Response::HTTP_SEE_OTHER);
+        }
+
+        return $this->render('tasks/edit.html.twig', [
+            'task' => $task,
+            'form' => $form->createView()
+        ]);
+    }
     
     #[Route('/{id}/toggle', name: 'task_toggle')]
     public function toggleTaskAction(Task $task, EntityManagerInterface $em)

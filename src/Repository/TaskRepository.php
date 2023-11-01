@@ -54,6 +54,16 @@ class TaskRepository extends ServiceEntityRepository
         }
     }
 
+    public function findTaskWithUserAndCategory(string $taskId): ?Task
+    {
+        return $this->createQueryBuilder('t')
+            ->select('t', 'u') // Select trick, user
+            ->leftJoin('t.user', 'u') // Join with User entity
+            ->where('t.id = :id')
+            ->setParameter('id', $taskId)
+            ->getQuery()
+            ->getOneOrNullResult();
+    }
 //    /**
 //     * @return Task[] Returns an array of Task objects
 //     */
