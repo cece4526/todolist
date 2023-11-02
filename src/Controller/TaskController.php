@@ -31,32 +31,32 @@ class TaskController extends AbstractController
         $task = new Task();
     // $this->denyAccessUnlessGranted('TASK_CREATE', $task);
         $form = $this->createForm(TaskType::class, $task);
-        // $user = $this->getUser();
+        $user = $this->getUser();
         // dd($form, $request);
         //the form request is processed
         $form->handleRequest($request);
 
-        // if ($user === null) {
+        if ($user === null) {
             
-        //     $this->addFlash('danger', 'Veuillez vous connecter pour ajouter un task');
-        //     return $this->redirectToRoute('app_home', [], Response::HTTP_SEE_OTHER);
-        // }
+            $this->addFlash('danger', 'Veuillez vous connecter pour ajouter un task');
+            return $this->redirectToRoute('app_login', [], Response::HTTP_SEE_OTHER);
+        }
         //I check if I have a form and that it is valid
         if ($form->isSubmitted() && $form->isValid()) {
             $now = new DateTimeImmutable();
             $task->setCreatedAt($now);
             $task->setTitle(strtoupper($task->getTitle()));
-            // $task->setAuthor($user);
+            $task->setUser($user);
             $em->persist($task);
             $em->flush();
 
             $taskRepository->save($task, true);
             $this->addFlash(
                 'success',
-                'Le task a bien été enregistré'
+                'La tâche a bien été enregistré'
             );
 
-            return $this->redirectToRoute('app_home', [], Response::HTTP_SEE_OTHER);
+            return $this->redirectToRoute('task_list', [], Response::HTTP_SEE_OTHER);
         }
 
         return $this->render('tasks/create.html.twig', [
@@ -80,11 +80,11 @@ class TaskController extends AbstractController
         //the form request is processed
         $form->handleRequest($request);
 
-        // if ($user === null) {
+        if ($user === null) {
             
-        //     $this->addFlash('danger', 'Veuillez vous connecter pour modifier une tache');
-        //     return $this->redirectToRoute('app_home', [], Response::HTTP_SEE_OTHER);
-        // }
+            $this->addFlash('danger', 'Veuillez vous connecter pour modifier une tâche');
+            return $this->redirectToRoute('app_login', [], Response::HTTP_SEE_OTHER);
+        }
         //I check if I have a form and that it is valid
         if ($form->isSubmitted() && $form->isValid()) {
             $now = new DateTimeImmutable();
@@ -98,7 +98,7 @@ class TaskController extends AbstractController
             $taskRepository->save($task, true);
             $this->addFlash(
                 'success',
-                'La tache a bien été enregistré'
+                'La tâche a bien été enregistré'
             );
 
             return $this->redirectToRoute('task_list', [], Response::HTTP_SEE_OTHER);
@@ -126,6 +126,7 @@ class TaskController extends AbstractController
     {
         // $this->denyAccessUnlessGranted('TRICK_DELETE', $trick);
         $taskRepository->remove($task, true);
+        $this->addFlash('success', sprintf('La tâche a bien eté supprimée'));
         return $this->redirectToRoute('task_list', [], Response::HTTP_SEE_OTHER);
     }
 }

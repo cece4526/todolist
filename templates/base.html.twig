@@ -35,15 +35,15 @@
         <!-- Page Content -->
         <div class="container">
             <div class="row">
-                {# <a href="{{ path('user_create') }}" class="btn btn-primary">Créer un utilisateur</a> #}
+                <a href="{{ path('app_register') }}" class="btn btn-primary">Créer un utilisateur</a>
 
                 {% if app.user %}
-                <a href="{{ path('logout') }}" class="pull-right btn btn-danger">Se déconnecter</a>
+                <a href="{{ path('app_logout') }}" class="pull-right btn btn-danger">Se déconnecter</a>
                 {% endif %}
 
-                {# {% if not app.user and 'login' != app.request.attributes.get('_route') %}
-                <a href="{{ path('login') }}" class="btn btn-success">Se connecter</a>
-                {% endif %} #}
+                {% if not app.user and 'login' != app.request.attributes.get('_route') %}
+                <a href="{{ path('app_login') }}" class="btn btn-success">Se connecter</a>
+                {% endif %}
             </div>
 
             <div class="row">
@@ -59,6 +59,16 @@
                             <strong>Oops !</strong> {{ flash_message }}
                         </div>
                     {% endfor %}
+                    {% if app.user and app.user.IsVerified == false %}
+                        <div class="alert alert-warning alert dismissible mt-3 position-fixed" role="alert">
+                            <svg class="bi flex-shrink-0 me-2" role="img" aria-label="Danger:"><use xlink:href="#exclamation-triangle-fill"/></svg>
+                            <div class="alert-message">
+                                <strong>Votre compte n'est pas activé</strong>,
+                                <a href="{{ path('resend_verif')}}">renvoyer le lien d'activation.</a>
+                            </div>
+                            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="close" ></button>
+                        </div>
+                    {% endif %}
 
                     {% block header_title %}{% endblock %}
                     {% block header_img %}<img class="slide-image" src="{{ asset('img/todolist_homepage.jpg') }}" alt="todo list">{% endblock %}

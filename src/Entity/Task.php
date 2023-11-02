@@ -17,7 +17,7 @@ class Task
     #[ORM\Column]
     private ?\DateTimeImmutable $createdAt = null;
 
-    #[ORM\Column]
+    #[ORM\Column(nullable:true)]
     private ?\DateTimeImmutable $updateAt = null;
 
     #[ORM\Column(length: 255)]
@@ -27,7 +27,7 @@ class Task
     private ?string $content = null;
 
     #[ORM\Column]
-    private ?bool $isDone = null;
+    private ?bool $isDone = false;
 
     #[ORM\ManyToOne(inversedBy: 'tasks')]
     private ?User $user = null;
