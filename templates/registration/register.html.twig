@@ -1,25 +1,62 @@
 {% extends 'base.html.twig' %}
 
-{% block title %}Register{% endblock %}
+{% block title %}Inscription{% endblock %}
 
 {% block body %}
     {% for flash_error in app.flashes('verify_email_error') %}
         <div class="alert alert-danger" role="alert">{{ flash_error }}</div>
     {% endfor %}
+<section class="container  mt-5 pt-1">
+    <div class="row width-container mx-auto">
+        <div class="col text-center">
+            <h1>Inscription</h1>
 
-    <h1>Register</h1>
+            {{ form_errors(registrationForm) }}
+
+            {{ form_start(registrationForm) }}
+            <div class="border border-secondary rounded-2 p-3 mb-2">
+            {% block form_row %}
+                <div class="col-12">
+                    {{ form_label(registrationForm.username) }}
+                    {{ form_widget(registrationForm.username) }}
+                </div>
+                <div class="col-12">                
+                    {{ form_label(registrationForm.email) }}
+                    {{ form_widget(registrationForm.email) }}
+                </div>
+                <div class="col-12">                
+                    {{ form_label(registrationForm.plainPassword) }}
+                    {{ form_widget(registrationForm.plainPassword) }}
+                </div>
+                <div class="col-md-4">                
+                    {{ form_label(registrationForm.roles) }}
+                    {{ form_widget(registrationForm.roles) }}
+                </div>
+                <div class="check">
+                    {{ form_label(registrationForm.agreeTerms) }}
+                    {{ form_widget(registrationForm.agreeTerms) }}
+                </div>
+            {% endblock %}
+                <button type="submit" class="btn btn-primary btn-lg my-3">Inscription</button>
+            </div>
+
+            {{ form_end(registrationForm) }}
+        </div>
+    </div>
+</section>
+    {# <h1>Register</h1>
 
     {{ form_errors(registrationForm) }}
 
     {{ form_start(registrationForm) }}
-        {{ form_row(registrationForm.email) }}
-        {{ form_row(registrationForm.username) }}
-        {{ form_row(registrationForm.plainPassword, {
+        {{ form_row(registrationForm.email, {'attr': {'class': 'form-control mb-4 border-b-2 border-slate-400'}}) }}
+        {{ form_row(registrationForm.username, {'attr': {'class': 'form-control mb-4 border-b-2 border-slate-400'}}) }}
+        {{ form_row(registrationForm.plainPassword, {'attr': {'class': 'form-control mb-4 border-b-2 border-slate-400'}}, {
             label: 'Password',
         }) }}
         {{ form_row(registrationForm.roles) }}
         {{ form_row(registrationForm.agreeTerms) }}
 
-        <button type="submit" class="btn">Register</button>
+        <button type="submit" class="btn">Register</button> #}
     {{ form_end(registrationForm) }}
 {% endblock %}
