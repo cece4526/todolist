@@ -29,7 +29,13 @@ class TaskService
         if ($page < 1) {
             throw new BadRequestHttpException('Le numéro de page doit être supérieur ou égal à 1.');
         }
+        
+        $route = $this->requestStack->getCurrentRequest()->attributes->get('_route');
+        if ($route === "task_list_finished") {
+            $tasksQuery = $this->taskRepo->findTaskWithFinished();
 
+            return $this->paginator->paginate($tasksQuery, $page, $limit);
+        }
         $tasksQuery = $this->taskRepo->findForPagination($user);
 
         return $this->paginator->paginate($tasksQuery, $page, $limit);

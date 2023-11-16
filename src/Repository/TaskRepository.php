@@ -54,7 +54,7 @@ class TaskRepository extends ServiceEntityRepository
         }
     }
 
-    public function findTaskWithUserAndCategory(string $taskId): ?Task
+    public function findTaskWithUser(string $taskId): ?Task 
     {
         return $this->createQueryBuilder('t')
             ->select('t', 'u') // Select trick, user
@@ -63,6 +63,16 @@ class TaskRepository extends ServiceEntityRepository
             ->setParameter('id', $taskId)
             ->getQuery()
             ->getOneOrNullResult();
+    }
+
+    public function findTaskWithFinished(?bool $taskIsDone = true): Query
+    {
+        return $this->createQueryBuilder('t')
+            ->select('t', 'u') // Select trick, user
+            ->leftJoin('t.user', 'u') // Join with User entity
+            ->where('t.isDone = :isDone')
+            ->setParameter('isDone', $taskIsDone)
+            ->getQuery();
     }
 //    /**
 //     * @return Task[] Returns an array of Task objects

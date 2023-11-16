@@ -5,8 +5,10 @@ namespace App\Entity;
 use App\Repository\TaskRepository;
 use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
 
 #[ORM\Entity(repositoryClass: TaskRepository::class)]
+#[UniqueEntity(fields: ['title'], message: 'la tache a déjà été enregistré')]
 class Task
 {
     #[ORM\Id]
@@ -20,7 +22,7 @@ class Task
     #[ORM\Column(nullable:true)]
     private ?\DateTimeImmutable $updateAt = null;
 
-    #[ORM\Column(length: 255)]
+    #[ORM\Column(length: 255, unique: true)]
     private ?string $title = null;
 
     #[ORM\Column(type: Types::TEXT)]
@@ -108,5 +110,4 @@ class Task
 
         return $this;
     }
-
 }

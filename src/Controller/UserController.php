@@ -14,7 +14,7 @@ use Symfony\Component\Routing\Annotation\Route;
 #[Route('/users')]
 class UserController extends AbstractController
 {
-    #[Route('/', name: 'user_list')]
+    #[Route('/list', name: 'user_list')]
     public function index(userService $userService): Response
     {
         return $this->render('Users/list.html.twig',['users'=> $userService->getPaginatedUsers()]);
