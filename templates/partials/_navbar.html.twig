@@ -1,0 +1,49 @@
+{# <nav class="navbar fixed-top bg-body-tertiary">
+    <div class="container-fluid">
+        <div class="row w-100">
+            <div class="">
+                <a class="navbar-brand" href="/">To Do List app</a>
+                <img src="{{ asset('img/Logo_OpenClassrooms.png') }}" alt="OpenClassrooms" />
+            </div>
+            <div class="col">
+                <a href="{{ path('app_register') }}" class="btn btn-primary">Créer un utilisateur</a>
+            </div>
+            {% if app.user %}
+            <li class="nav-item">
+                <a href="{{ path('app_logout') }}" class="pull-right btn btn-danger">Se déconnecter</a>
+            </li>
+            {% endif %}
+            {% if not app.user and 'login' != app.request.attributes.get('_route') %}
+            <li class="nav-item">
+                <a href="{{ path('app_login') }}" class="btn btn-success">Se connecter</a>
+            </li>
+            {% endif %}
+        </div>
+    </div>
+</nav> #}
+
+<nav class="navbar navbar-expand-lg fixed-top bg-body-tertiary">
+    <div class="container-fluid">
+        <div class="">
+            <a class="navbar-brand" href="/">To Do List app</a>
+            <img src="{{ asset('img/Logo_OpenClassrooms.png') }}" alt="OpenClassrooms" />
+        </div>
+        <div class="collapse navbar-collapse" id="navbarSupportedContent">
+            <ul class="navbar-nav me-auto mb-2 mb-lg-0">
+                <li class="nav-item m-1">
+                <a href="{{ path('app_register') }}" class="btn btn-primary">Créer un utilisateur</a>
+                </li>
+                {% if app.user %}
+                <li class="nav-item m-1">
+                    <a href="{{ path('app_logout') }}" class="pull-right btn btn-danger">Se déconnecter</a>
+                </li>
+                {% endif %}
+                {% if not app.user and 'login' != app.request.attributes.get('_route') %}
+                <li class="nav-item m-1">
+                    <a href="{{ path('app_login') }}" class="btn btn-success">Se connecter</a>
+                </li>
+                {% endif %}
+            </ul>
+        </div>
+    </div>
+</nav>

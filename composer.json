@@ -11,14 +11,23 @@
         "doctrine/doctrine-migrations-bundle": "^3.2",
         "doctrine/orm": "^2.16",
         "incenteev/composer-parameter-handler": "^2.1",
+        "knplabs/knp-paginator-bundle": "^6.2",
+        "symfony/asset": "6.3.*",
         "symfony/console": "6.3.*",
         "symfony/dotenv": "6.3.*",
         "symfony/flex": "^2",
+        "symfony/form": "6.3.*",
         "symfony/framework-bundle": "6.3.*",
         "symfony/mailer": "6.3.*",
         "symfony/monolog-bundle": "*",
         "symfony/runtime": "6.3.*",
-        "symfony/yaml": "6.3.*"
+        "symfony/security-bundle": "6.3.*",
+        "symfony/twig-bundle": "6.3.*",
+        "symfony/validator": "6.3.*",
+        "symfony/yaml": "6.3.*",
+        "symfonycasts/verify-email-bundle": "^1.14",
+        "twig/extra-bundle": "^2.12|^3.0",
+        "twig/twig": "^2.12|^3.0"
     },
     "config": {
         "allow-plugins": {
@@ -57,8 +66,7 @@
             " Incenteev \\ ParameterHandler \\ ScriptHandler::buildParameters "
         ],
         "post-update-cmd": [
-            "@auto-scripts",
-            " Incenteev \\ ParameterHandler \\ ScriptHandler::buildParameters "
+            "@auto-scripts"
         ]
     },
     "conflict": {
@@ -75,6 +83,8 @@
     },
     "require-dev": {
         "symfony/maker-bundle": "^1.51",
-        "symfony/phpunit-bridge": "^6.3"
+        "symfony/phpunit-bridge": "^6.3",
+        "symfony/stopwatch": "6.3.*",
+        "symfony/web-profiler-bundle": "6.3.*"
     }
 }

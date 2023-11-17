@@ -1,0 +1,11 @@
+                        {% if app.user.roles.0 == 'ROLE_ADMIN' %}
+                            <form method="post" action="{{ path('user_delete', {'id': user.id}) }}" onsubmit="return confirm('etes-vous sur de vouloir supprimé le compte ?');">
+                                <input type="hidden" name="_token" value="{{ csrf_token('delete' ~ user.id) }}">
+                                <button class="btn btn-primary my-8 py-2 px-12 hover:italic hover:bg-cyan-300">Supprimer le compte</button>
+                            </form>
+                        {% elseif app.user.id == user.id %}
+                            <form method="post" action="{{ path('user_delete', {'id': user.id}) }}" onsubmit="return confirm('etes-vous sur de vouloir supprimé le compte ?');">
+                                <input type="hidden" name="_token" value="{{ csrf_token('delete' ~ user.id) }}">
+                                <button class="btn btn-primary my-8 py-2 px-12 hover:italic hover:bg-cyan-300">Supprimer le compte</button>
+                            </form>
+                        {% endif %}

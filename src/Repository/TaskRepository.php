@@ -3,7 +3,9 @@
 namespace App\Repository;
 
 use App\Entity\Task;
+use App\Entity\User;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
+use Doctrine\ORM\Query;
 use Doctrine\Persistence\ManagerRegistry;
 
 /**
@@ -21,6 +23,47 @@ class TaskRepository extends ServiceEntityRepository
         parent::__construct($registry, Task::class);
     }
 
+    public function save(Task $entity, bool $flush = false): void
+    {
+        $this->getEntityManager()->persist($entity);
+
+        if ($flush) {
+            $this->getEntityManager()->flush();
+        }
+    }
+
+    public function findForPagination(?User $user = null): Query
+    {
+        $qb = $this->createQueryBuilder('t')
+        ->orderBy('t.id','DESC');
+        
+        if ($user) {
+            $qb->leftJoin('t.user','u')
+                ->where($qb->expr()->eq('u.id',':userId'))
+                ->setParameter('userId', $user->getId());
+        }
+        return $qb->getQuery();
+    }
+
+    public function remove(Task $entity, bool $flush = false): void
+    {
+        $this->getEntityManager()->remove($entity);
+
+        if ($flush) {
+            $this->getEntityManager()->flush();
+        }
+    }
+
+    public function findTaskWithUserAndCategory(string $taskId): ?Task
+    {
+        return $this->createQueryBuilder('t')
+            ->select('t', 'u') // Select trick, user
+            ->leftJoin('t.user', 'u') // Join with User entity
+            ->where('t.id = :id')
+            ->setParameter('id', $taskId)
+            ->getQuery()
+            ->getOneOrNullResult();
+    }
 //    /**
 //     * @return Task[] Returns an array of Task objects
 //     */
