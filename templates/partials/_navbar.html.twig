@@ -6,28 +6,31 @@
         </div>
         <div class="collapse navbar-collapse" id="navbarSupportedContent">
             <ul class="navbar-nav me-auto mb-2 mb-lg-0">
+            {% if app.user %}
+                {% if app.user.roles[0] == "ROLE_ADMIN" %}
                 <li class="nav-item m-1">
-                <a href="{{ path('app_register') }}" class="btn btn-primary">Créer un utilisateur</a>
+                    <a href="{{ path('app_register') }}" class="btn btn-primary">Créer un utilisateur</a>
                 </li>
-                {% if app.user %}
+                {% endif %}
+            {% endif %}
+
+            {% if app.user %}
                 <li class="nav-item m-1">
                     <a href="{{ path('app_logout') }}" class="pull-right btn btn-danger">Se déconnecter</a>
                 </li>
-                {% endif %}
+            {% endif %}
                 {% if not app.user and 'login' != app.request.attributes.get('_route') %}
                 <li class="nav-item m-1">
                     <a href="{{ path('app_login') }}" class="btn btn-success">Se connecter</a>
                 </li>
+            {% endif %}
+            {% if app.user %}
+                {% if app.user.roles[0] == "ROLE_ADMIN" %}
+                <li class="nav-item m-1">
+                    <a href="{{ path('user_list') }}" class="btn btn-info">liste des utilisateurs</a>
+                </li>
                 {% endif %}
-                {% if app.user %}
-                    {% if app.user.roles[0] == "ROLE_ADMIN" %}
-                    <li class="nav-item m-1">
-                        <a href="{{ path('user_list') }}" class="btn btn-info">liste des utilisateurs</a>
-                    </li>
-                    {% endif %}
-                {% endif %}
-                
-
+            {% endif %}
             </ul>
         </div>
     </div>

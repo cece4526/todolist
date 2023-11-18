@@ -24,6 +24,12 @@ class RegistrationControllerTest extends WebTestCase
     public function testSubmitValidForm()
     {
         $client = static::createClient();
+        $crawler = $client->request('GET', '/login');
+        $form = $crawler->selectButton('Me connecter')->form();
+        $form['email'] = 'admin@example.com';
+        $form['password'] = 'password';
+        $client->submit($form);
+        
         $crawler = $client->request('GET', '/register');
 
         $form = $crawler->selectButton('Inscription')->form();
