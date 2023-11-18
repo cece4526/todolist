@@ -5,10 +5,31 @@
 
 {% block body %}
     <div class="row">
-        {{ form_start(form, {'action' : path('user_edit', {'id' : user.id})}) }}
-        {{ form_widget(form) }}
+        {{ form_start(form, {'action' : path('user_edit', { 'id' : user.id }), 'onsubmit' : "return confirm('Êtes-vous sûr de vouloir supprimer la tâche ?');"}) }}
+            {% block form_row %}
+                <div class="col-12">
+                    {{ form_label(form.username) }}
+                    {{ form_widget(form.username) }}
+                </div>
+                <div class="col-12">                
+                    {{ form_label(form.email) }}
+                    {{ form_widget(form.email) }}
+                </div>
+                <div class="col-md-4">                
+                    {{ form_label(form.roles) }}
+                    {{ form_widget(form.roles) }}
+                </div>
+            {% endblock %}
 
-        <button type="submit" class="btn btn-success pull-right">Modifier</button>
+            <button type="submit" class="btn btn-success pull-right" id="submitBtn">Modifier</button>
         {{ form_end(form) }}
     </div>
+    <script>
+        document.getElementById('submitBtn').addEventListener('click', function() {
+            if (confirm('Êtes-vous sûr de vouloir modifier l\'utilisateur ?')) {
+                // Si l'utilisateur clique sur "OK", soumettez le formulaire
+                document.forms[0].submit();  // Assurez-vous d'ajuster ceci en fonction de votre structure HTML
+            }
+        });
+    </script>
 {% endblock %}

@@ -35,11 +35,11 @@ class TaskRepository extends ServiceEntityRepository
     public function findForPagination(?User $user = null): Query
     {
         $qb = $this->createQueryBuilder('t')
-        ->orderBy('t.id','DESC');
-        
+        ->orderBy('t.id', 'DESC');
+
         if ($user) {
-            $qb->leftJoin('t.user','u')
-                ->where($qb->expr()->eq('u.id',':userId'))
+            $qb->leftJoin('t.user', 'u')
+                ->where($qb->expr()->eq('u.id', ':userId'))
                 ->setParameter('userId', $user->getId());
         }
         return $qb->getQuery();
@@ -54,7 +54,7 @@ class TaskRepository extends ServiceEntityRepository
         }
     }
 
-    public function findTaskWithUserAndCategory(string $taskId): ?Task
+    public function findTaskWithUser(string $taskId): ?Task
     {
         return $this->createQueryBuilder('t')
             ->select('t', 'u') // Select trick, user
@@ -63,6 +63,16 @@ class TaskRepository extends ServiceEntityRepository
             ->setParameter('id', $taskId)
             ->getQuery()
             ->getOneOrNullResult();
+    }
+
+    public function findTaskWithFinished(?bool $taskIsDone = true): Query
+    {
+        return $this->createQueryBuilder('t')
+            ->select('t', 'u') // Select trick, user
+            ->leftJoin('t.user', 'u') // Join with User entity
+            ->where('t.isDone = :isDone')
+            ->setParameter('isDone', $taskIsDone)
+            ->getQuery();
     }
 //    /**
 //     * @return Task[] Returns an array of Task objects

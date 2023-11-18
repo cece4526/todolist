@@ -8,7 +8,7 @@ use Symfony\Component\HttpFoundation\RequestStack;
 use Knp\Component\Pager\PaginatorInterface;
 use Symfony\Component\HttpKernel\Exception\BadRequestHttpException;
 
-class TaskService 
+class TaskService
 {
     private RequestStack $requestStack;
     private TaskRepository $taskRepo;
@@ -25,11 +25,17 @@ class TaskService
     {
         $request = $this->requestStack->getMainRequest();
         $page = $request->query->getInt('page', 1);
-        $limit = $request->query->getInt('limit', 5);
+        $limit = $request->query->getInt('limit', 10);
         if ($page < 1) {
             throw new BadRequestHttpException('Le numéro de page doit être supérieur ou égal à 1.');
         }
 
+        $route = $this->requestStack->getCurrentRequest()->attributes->get('_route');
+        if ($route === "task_list_finished") {
+            $tasksQuery = $this->taskRepo->findTaskWithFinished();
+
+            return $this->paginator->paginate($tasksQuery, $page, $limit);
+        }
         $tasksQuery = $this->taskRepo->findForPagination($user);
 
         return $this->paginator->paginate($tasksQuery, $page, $limit);

@@ -18,7 +18,6 @@ use Symfony\Component\Validator\Constraints\NotBlank;
 
 class RegistrationFormType extends AbstractType
 {
-
     public function buildForm(FormBuilderInterface $builder, array $options): void
     {
         $builder
@@ -37,11 +36,10 @@ class RegistrationFormType extends AbstractType
             ->add('roles', ChoiceType::class, [
                 'label' => 'Roles utilisateur',
                 'attr' => [
-                    'class' => 'form-select'
+                    'class' => 'form-check'
                 ],
                 'choices' => [
-                            'Admin' => "ROLE_ADMIN",
-                            'User' => "ROLE_USER"
+                            'Admin' => "ROLE_ADMIN"
                         ],
                 'required' => true,
                 'multiple' => true,
@@ -60,10 +58,10 @@ class RegistrationFormType extends AbstractType
                 'invalid_message' => 'Les deux mots de passe doivent correspondre.',
                 'required' => true,
                 'first_options'  => ['label' => 'Mot de passe',
-                                    'attr' => ['class' => 'form-control' ] 
+                                    'attr' => ['class' => 'form-control' ]
                                 ],
                 'second_options' => ['label' => 'Tapez le mot de passe à nouveau',
-                                    'attr' => ['class' => 'form-control' ]    
+                                    'attr' => ['class' => 'form-control' ]
                                 ],
                 'mapped' => false,
                 'attr' => [
