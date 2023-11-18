@@ -12,7 +12,7 @@ class TaskControllerTest extends WebTestCase
         $client = static::createClient();
         $crawler = $client->request('GET', '/login');
         $form = $crawler->selectButton('Me connecter')->form();
-        $form['email'] = 'cece4526@hotmail.fr';
+        $form['email'] = 'admin@example.com';
         $form['password'] = 'password';
         $client->submit($form);
 
@@ -25,7 +25,7 @@ class TaskControllerTest extends WebTestCase
         $client = static::createClient();
         $crawler = $client->request('GET', '/login');
         $form = $crawler->selectButton('Me connecter')->form();
-        $form['email'] = 'cece4526@hotmail.fr';
+        $form['email'] = 'admin@example.com';
         $form['password'] = 'password';
         $client->submit($form);
 
@@ -40,7 +40,7 @@ class TaskControllerTest extends WebTestCase
 
         $crawler = $client->request('GET', '/login');
         $form = $crawler->selectButton('Me connecter')->form();
-        $form['email'] = 'cece4526@hotmail.fr';
+        $form['email'] = 'admin@example.com';
         $form['password'] = 'password';
         $client->submit($form);
 
@@ -61,7 +61,7 @@ class TaskControllerTest extends WebTestCase
 
         $crawler = $client->request('GET', '/login');
         $form = $crawler->selectButton('Me connecter')->form();
-        $form['email'] = 'cece4526@hotmail.fr';
+        $form['email'] = 'admin@example.com';
         $form['password'] = 'password';
         $client->submit($form);
 
@@ -84,7 +84,7 @@ class TaskControllerTest extends WebTestCase
 
         $crawler = $client->request('GET', '/login');
         $form = $crawler->selectButton('Me connecter')->form();
-        $form['email'] = 'cece4526@hotmail.fr';
+        $form['email'] = 'admin@example.com';
         $form['password'] = 'password';
         $client->submit($form);
 
@@ -103,7 +103,7 @@ class TaskControllerTest extends WebTestCase
 
         $crawler = $client->request('GET', '/login');
         $form = $crawler->selectButton('Me connecter')->form();
-        $form['email'] = 'cece4526@hotmail.fr';
+        $form['email'] = 'admin@example.com';
         $form['password'] = 'password';
         $client->submit($form);
 

@@ -27,7 +27,7 @@ class UserControllerTest extends WebTestCase
 
         $crawler = $client->request('GET', '/login');
         $form = $crawler->selectButton('Me connecter')->form();
-        $form['email'] = 'cece4526@hotmail.fr';
+        $form['email'] = 'admin@example.com';
         $form['password'] = 'password';
         $client->submit($form);
         $userRepository = static::getContainer()->get(UserRepository::class);
@@ -65,7 +65,7 @@ class UserControllerTest extends WebTestCase
         // Login
         $client->request('GET', '/login');
         $form = $client->getCrawler()->selectButton('Me connecter')->form();
-        $form['email'] = 'cece4526@hotmail.fr';
+        $form['email'] = 'admin@example.com';
         $form['password'] = 'password';
         $client->submit($form);
 
