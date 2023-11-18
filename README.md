@@ -1,5 +1,7 @@
 # ToDo List OpenClassRoom
 
+[![Codacy Badge](https://api.codacy.com/project/badge/Grade/87f18cbb602b4f11bfb62522857ecfa5)](https://app.codacy.com/gh/cece4526/todolist?utm_source=github.com&utm_medium=referral&utm_content=cece4526/todolist&utm_campaign=Badge_Grade)
+
 Voici le projet n°8 du parcours de développeur d'application PHP/Symfony chez [Openclassroom](https://openclassrooms.com/fr/)
 
 ### Installation
