@@ -7,7 +7,6 @@ use Doctrine\Bundle\FixturesBundle\Fixture;
 use Doctrine\Persistence\ObjectManager;
 use Symfony\Component\PasswordHasher\Hasher\UserPasswordHasherInterface;
 
-
 class UserFixtures extends Fixture
 {
     private UserPasswordHasherInterface $passwordHasher;
@@ -32,7 +31,7 @@ class UserFixtures extends Fixture
         $admin->setUsername('admin');
         $admin->setRoles(['ROLE_ADMIN']);
         $admin->setIsVerified(true);
-        $admin->setPassword($this->passwordHasher->hashPassword($admin, 'pasword')); // Change the password
+        $admin->setPassword($this->passwordHasher->hashPassword($admin, 'password')); // Change the password
         $manager->persist($admin);
 
         $manager->flush();

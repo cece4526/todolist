@@ -86,6 +86,25 @@ class UserTest extends TestCase
         $this->assertInstanceOf(Task::class, $user->getTasks()->first());
     }
 
+    public function testRemoveTask()
+    {
+
+        $user = new User();
+
+        $task = new Task();
+        $task->setUser($user);
+
+        $user->addTask($task);
+
+        $this->assertTrue($user->getTasks()->contains($task));
+
+        $user->removeTask($task);
+
+        $this->assertFalse($user->getTasks()->contains($task));
+
+        $this->assertNull($task->getUser());
+    }
+
     public function testIsVerified()
     {
         $user = new User();

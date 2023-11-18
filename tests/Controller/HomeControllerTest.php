@@ -2,6 +2,7 @@
 
 namespace App\Tests\Controller;
 
+use App\Repository\UserRepository;
 use Symfony\Bundle\FrameworkBundle\Test\WebTestCase;
 use Symfony\Component\HttpFoundation\Response;
 
@@ -11,15 +12,15 @@ class HomeControllerTest extends WebTestCase
     {
         $client = static::createClient();
 
-        // Log in a user for the test
-        $user = $this->createMock(\App\Entity\User::class);
-        $user->method('getId')->willReturn(1);
-        
+        $userRepository = static::getContainer()->get(UserRepository::class);
+        $user = $userRepository->findOneByEmail('test@test.test');
+        $urlGenerator = $client->getContainer()->get('router.default');
         $client->loginUser($user);
 
         $client->request('GET', '/');
 
-        $this->assertEquals(Response::HTTP_OK, $client->getResponse()->getStatusCode());
+        $client->request('GET', $urlGenerator->generate('home'));
+        $this->assertResponseStatusCodeSame(Response::HTTP_OK);
     }
 
     public function testIndexForUnauthenticatedUser()
@@ -31,4 +32,5 @@ class HomeControllerTest extends WebTestCase
         $this->assertEquals(Response::HTTP_FOUND, $client->getResponse()->getStatusCode());
         $this->assertTrue($client->getResponse()->isRedirect('/login')); // Adjust the redirect URL
     }
+
 }

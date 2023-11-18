@@ -2,68 +2,115 @@
 
 namespace App\Tests\Controller;
 
+use App\Repository\TaskRepository;
 use Symfony\Bundle\FrameworkBundle\Test\WebTestCase;
-use Symfony\Component\HttpFoundation\Response;
-use Symfony\Component\BrowserKit\AbstractBrowser;
-
 
 class TaskControllerTest extends WebTestCase
 {
     public function testIndex()
     {
         $client = static::createClient();
+        $crawler = $client->request('GET', '/login');
+        $form = $crawler->selectButton('Me connecter')->form();
+        $form['email'] = 'cece4526@hotmail.fr';
+        $form['password'] = 'password';
+        $client->submit($form);
 
         $client->request('GET', '/tasks/');
-
-        $this->assertEquals(Response::HTTP_OK, $client->getResponse()->getStatusCode());
+        $this->assertResponseIsSuccessful();
     }
 
-    public function testFinishedTaskList()
+    public function testtaskFinished()
     {
         $client = static::createClient();
+        $crawler = $client->request('GET', '/login');
+        $form = $crawler->selectButton('Me connecter')->form();
+        $form['email'] = 'cece4526@hotmail.fr';
+        $form['password'] = 'password';
+        $client->submit($form);
 
         $client->request('GET', '/tasks/finished');
-
-        $this->assertEquals(Response::HTTP_OK, $client->getResponse()->getStatusCode());
+        $this->assertResponseIsSuccessful();
     }
 
     public function testNewTask()
     {
         $client = static::createClient();
 
-        $client->request('GET', '/tasks/new');
 
-        $this->assertEquals(Response::HTTP_OK, $client->getResponse()->getStatusCode());
+        $crawler = $client->request('GET', '/login');
+        $form = $crawler->selectButton('Me connecter')->form();
+        $form['email'] = 'cece4526@hotmail.fr';
+        $form['password'] = 'password';
+        $client->submit($form);
+
+        $crawler = $client->request('GET', '/tasks/new');
+        $form = $crawler->selectButton('Ajouter')->form([
+            'task[title]' => 'Test Task',
+            'task[content]' => 'This is a test task content.',
+        ]);
+
+        $client->submit($form);
+        $this->assertResponseRedirects('/tasks/');
+
     }
 
     public function testEditTask()
     {
         $client = static::createClient();
 
-        // Assuming there is a task with ID 1 in the database
-        $client->request('GET', '/tasks/edition/1');
+        $crawler = $client->request('GET', '/login');
+        $form = $crawler->selectButton('Me connecter')->form();
+        $form['email'] = 'cece4526@hotmail.fr';
+        $form['password'] = 'password';
+        $client->submit($form);
 
-        $this->assertEquals(Response::HTTP_OK, $client->getResponse()->getStatusCode());
+        $taskRepository = static::getContainer()->get(TaskRepository::class);
+        $task = $taskRepository->findOneByTitle('Test Task');
+        $crawler = $client->request('GET', '/tasks/edition/'.$task->getId());
+        $form = $crawler->selectButton('Modifier')->form([
+            'task[title]' => 'Updated Test Task',
+            'task[content]' => 'This is the updated content.',
+        ]);
+
+        $client->submit($form);
+        $this->assertResponseRedirects('/tasks/');
+
     }
 
     public function testToggleTask()
     {
         $client = static::createClient();
 
-        // Assuming there is a task with ID 1 in the database
-        $client->request('GET', '/tasks/toggle/1');
+        $crawler = $client->request('GET', '/login');
+        $form = $crawler->selectButton('Me connecter')->form();
+        $form['email'] = 'cece4526@hotmail.fr';
+        $form['password'] = 'password';
+        $client->submit($form);
 
-        $this->assertEquals(Response::HTTP_FOUND, $client->getResponse()->getStatusCode());
+        $taskRepository = static::getContainer()->get(TaskRepository::class);
+        $task = $taskRepository->findOneByTitle('Updated Test Task');
+
+        $client->request('GET', '/tasks/toggle/'.$task->getId());
+        $this->assertResponseRedirects('/tasks/');
+
     }
 
     public function testDeleteTask()
     {
         $client = static::createClient();
 
-        // Assuming there is a task with ID 1 in the database
-        $client->request('GET', '/tasks/delete/1');
 
-        $this->assertEquals(Response::HTTP_FOUND, $client->getResponse()->getStatusCode());
+        $crawler = $client->request('GET', '/login');
+        $form = $crawler->selectButton('Me connecter')->form();
+        $form['email'] = 'cece4526@hotmail.fr';
+        $form['password'] = 'password';
+        $client->submit($form);
+
+        $taskRepository = static::getContainer()->get(TaskRepository::class);
+        $task = $taskRepository->findOneByTitle('Updated Test Task');
+
+        $client->request('GET', '/tasks/delete/'.$task->getId());
+        $this->assertResponseRedirects('/tasks/');
     }
-
 }

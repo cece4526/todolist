@@ -35,11 +35,11 @@ class TaskRepository extends ServiceEntityRepository
     public function findForPagination(?User $user = null): Query
     {
         $qb = $this->createQueryBuilder('t')
-        ->orderBy('t.id','DESC');
-        
+        ->orderBy('t.id', 'DESC');
+
         if ($user) {
-            $qb->leftJoin('t.user','u')
-                ->where($qb->expr()->eq('u.id',':userId'))
+            $qb->leftJoin('t.user', 'u')
+                ->where($qb->expr()->eq('u.id', ':userId'))
                 ->setParameter('userId', $user->getId());
         }
         return $qb->getQuery();
@@ -54,7 +54,7 @@ class TaskRepository extends ServiceEntityRepository
         }
     }
 
-    public function findTaskWithUser(string $taskId): ?Task 
+    public function findTaskWithUser(string $taskId): ?Task
     {
         return $this->createQueryBuilder('t')
             ->select('t', 'u') // Select trick, user

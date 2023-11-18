@@ -43,7 +43,7 @@ class UserRepository extends ServiceEntityRepository implements PasswordUpgrader
     public function findForPagination(): ORMQuery
     {
         $qb = $this->createQueryBuilder('u')
-        ->orderBy('u.id','DESC');
+        ->orderBy('u.id', 'DESC');
         return $qb->getQuery();
     }
 

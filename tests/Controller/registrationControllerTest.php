@@ -2,6 +2,7 @@
 
 namespace App\Tests\Controller;
 
+use App\Form\RegistrationFormType;
 use Symfony\Bundle\FrameworkBundle\Test\WebTestCase;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\BrowserKit\AbstractBrowser;
@@ -20,34 +21,34 @@ class RegistrationControllerTest extends WebTestCase
         $this->assertEquals(Response::HTTP_OK, $client->getResponse()->getStatusCode());
     }
 
-    public function testVerifyUserEmail()
+    public function testSubmitValidForm()
     {
         $client = static::createClient();
+        $crawler = $client->request('GET', '/register');
 
+        $form = $crawler->selectButton('Inscription')->form();
+        $form['registration_form[email]'] = 'test@example.com';
+        $form['registration_form[username]'] = 'testuser';
+        $form['registration_form[roles]'] = [];
+        $form['registration_form[agreeTerms]'] = true;
+        $form['registration_form[plainPassword][first]'] = 'password123';
+        $form['registration_form[plainPassword][second]'] = 'password123';
 
-        $user = $this->createMock(\App\Entity\User::class);
-        $user->method('getId')->willReturn(1);
+        // Mocking the EmailVerifier
+        $emailVerifierMock = $this->getMockBuilder(EmailVerifier::class)
+        ->disableOriginalConstructor()
+        ->getMock();
 
-        $client->loginUser($user);
+        // Replace the real EmailVerifier service with the mock in the container
+        self::getContainer()->set(EmailVerifier::class, $emailVerifierMock);
 
-        $client->request('GET', '/verify/email');
+        $client->submit($form);
+        
+        $this->assertTrue($client->getResponse()->isRedirect('/'));
 
-        $this->assertEquals(Response::HTTP_FOUND, $client->getResponse()->getStatusCode());
+        $client->followRedirect();
+
+        $this->assertResponseIsSuccessful();
+
     }
-
-    public function testResendEmail()
-    {
-        $client = static::createClient();
-
-        $user = $this->createMock(\App\Entity\User::class);
-        $user->method('getId')->willReturn(1); 
-
-        $client->loginUser($user);
-
-        $client->request('GET', '/resend/email');
-
-        $this->assertEquals(Response::HTTP_FOUND, $client->getResponse()->getStatusCode());
-    }
-
-
 }

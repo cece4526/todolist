@@ -17,7 +17,7 @@ class UserController extends AbstractController
     #[Route('/list', name: 'user_list')]
     public function index(userService $userService): Response
     {
-        return $this->render('Users/list.html.twig',['users'=> $userService->getPaginatedUsers()]);
+        return $this->render('Users/list.html.twig', ['users' => $userService->getPaginatedUsers()]);
     }
 
     #[Route('/edit/{id}', name: 'user_edit', methods: ['GET', 'POST'])]
@@ -42,7 +42,7 @@ class UserController extends AbstractController
     #[Route('/delete/{id}', name: 'user_delete', methods: ['POST'])]
     public function delete(Request $request, User $user, UserRepository $userRepository): Response
     {
-        if ($this->isCsrfTokenValid('delete'.$user->getId(), $request->request->get('_token'))) {
+        if ($this->isCsrfTokenValid('delete' . $user->getId(), $request->request->get('_token'))) {
             if ($this->getUser()->getId() === $user->getId()) {
                 $userRepository->remove($user, true);
 

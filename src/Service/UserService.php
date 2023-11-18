@@ -2,13 +2,12 @@
 
 namespace App\Service;
 
-
 use App\Repository\UserRepository;
 use Symfony\Component\HttpFoundation\RequestStack;
 use Knp\Component\Pager\PaginatorInterface;
 use Symfony\Component\HttpKernel\Exception\BadRequestHttpException;
 
-class UserService 
+class UserService
 {
     private RequestStack $requestStack;
     private UserRepository $userRepo;
@@ -25,7 +24,7 @@ class UserService
     {
         $request = $this->requestStack->getMainRequest();
         $page = $request->query->getInt('page', 1);
-        $limit = $request->query->getInt('limit', 5);
+        $limit = $request->query->getInt('limit', 10);
         if ($page < 1) {
             throw new BadRequestHttpException('Le numéro de page doit être supérieur ou égal à 1.');
         }
