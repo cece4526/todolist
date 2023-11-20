@@ -52,32 +52,28 @@ class UserControllerTest extends WebTestCase
     public function testDeleteAction(): void
     {
         $client = static::createClient();
-
-        // Assume you have a user with ID 1 in your database
-        $userRepository = static::getContainer()->get(UserRepository::class);
-        $user = $userRepository->findOneByEmail('test@example.com');
-
-        $session = self::getContainer()->get('session');
-        $session->set('user_id', $user->getId());
-        $session->save();
-
-        $client->setSession($session);
-        // Login
         $client->request('GET', '/login');
         $form = $client->getCrawler()->selectButton('Me connecter')->form();
         $form['email'] = 'admin@example.com';
         $form['password'] = 'password';
         $client->submit($form);
-
         // Assume you have a user with ID 1 in your database
-        $csrfToken = $client->getContainer()->get('security.csrf.token_manager')->getToken('delete' . $user->getId());
+        $userRepository = static::getContainer()->get(UserRepository::class);
+        $user = $userRepository->findOneByEmail('test@test.test');
+        $session = $client->getContainer()->get('session');
+        // $session->set('user_id', $user->getId());
+        // $session->save();
+        
+        // $client->setSession($session);
 
+        $csrfToken = $client->getContainer()->get('security.csrf.token_manager')->getToken('delete' . $user->getId());
+        
         $client->request(
             'POST',
             '/delete/'.$user->getId(),
-            ['_token' => $csrfToken]
+            ['_csrf_token' => $csrfToken]
         );
-
+        dump($client);
         $this->assertResponseRedirects('/user_list', 302);
 
         // Optionally, you can check if the user with ID 1 is actually deleted from the database
