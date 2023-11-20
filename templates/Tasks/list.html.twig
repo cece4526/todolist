@@ -13,10 +13,22 @@
                 <div class="col">
                     <div class="card shadow-sm">
                         <div class="card-body">
-                            <h4 class="card-text">
+                            <h4 class="card-text">                                
                                 {% if task.isDone %}<span class="glyphicon glyphicon-ok"></span>{% else %}<span class="glyphicon glyphicon-remove"></span>{% endif %}
                             </h4>
-                            <h4><a href="{{ path('task_edit', {'id' : task.id }) }}">{{ task.title }}</a></h4>
+                            {% if task.user == null and app.user.roles[0] == "ROLE_ADMIN"%}
+                                <h4><a href="{{ path('task_edit', {'id' : task.id }) }}">{{ task.title }}</a></h4>
+                            {% elseif task.user == null %}
+                                <h4> {{ task.title }} </h4>
+                            {% elseif task.user != null %}
+                                {% if app.user.id == task.user.id %}
+                                    <h4><a href="{{ path('task_edit', {'id' : task.id }) }}">{{ task.title }}</a></h4>
+                                {% else %}
+                                   <h4> {{ task.title }} </h4> 
+                                {% endif %}  
+                            {% endif %}
+                            
+                            
                             <p class="card-text">{{ task.content }}</p>
                         {% if task.user %}
                             <p>Par : {{ task.user.username }} </p>

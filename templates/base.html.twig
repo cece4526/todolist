@@ -24,30 +24,9 @@
     </head>
     <body>
         {{ include('partials/_navbar.html.twig') }}
-        {# <nav class="navbar navbar-light fixed-top" style="background-color: #e3f2fd;" role="navigation">
-            <div class="container">
-                <div class="col">
-                    <a class="navbar-brand" href="#">To Do List app</a>
-
-                    <img src="{{ asset('img/Logo_OpenClassrooms.png') }}" alt="OpenClassrooms" />
-                </div>
-            </div>
-        </nav> #}
 
         <!-- Page Content -->
         <div class="container">
-            {# <div class="row">
-                <a href="{{ path('app_register') }}" class="btn btn-primary">Créer un utilisateur</a>
-
-                {% if app.user %}
-                <a href="{{ path('app_logout') }}" class="pull-right btn btn-danger">Se déconnecter</a>
-                {% endif %}
-
-                {% if not app.user and 'login' != app.request.attributes.get('_route') %}
-                <a href="{{ path('app_login') }}" class="btn btn-success">Se connecter</a>
-                {% endif %}
-            </div> #}
-
             <div class="row mt-5">
                 <div class="col-md-12">
                     {% for flash_message in app.session.flashBag.get('success') %}
@@ -57,6 +36,12 @@
                     {% endfor %}
 
                     {% for flash_message in app.session.flashBag.get('error') %}
+                        <div class="alert alert-danger" role="alert">
+                            <strong>Oops !</strong> {{ flash_message }}
+                        </div>
+                    {% endfor %}
+
+                    {% for flash_message in app.session.flashBag.get('danger') %}
                         <div class="alert alert-danger" role="alert">
                             <strong>Oops !</strong> {{ flash_message }}
                         </div>

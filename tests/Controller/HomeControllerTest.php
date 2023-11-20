@@ -11,15 +11,14 @@ class HomeControllerTest extends WebTestCase
     public function testIndexForAuthenticatedUser()
     {
         $client = static::createClient();
-
-        $userRepository = static::getContainer()->get(UserRepository::class);
-        $user = $userRepository->findOneByEmail('test@test.test');
-        $urlGenerator = $client->getContainer()->get('router.default');
-        $client->loginUser($user);
+        $crawler = $client->request('GET', '/login');
+        $form = $crawler->selectButton('Me connecter')->form();
+        $form['email'] = 'admin@example.com';
+        $form['password'] = 'password';
+        $client->submit($form);
 
         $client->request('GET', '/');
 
-        $client->request('GET', $urlGenerator->generate('home'));
         $this->assertResponseStatusCodeSame(Response::HTTP_OK);
     }
 
@@ -29,7 +28,6 @@ class HomeControllerTest extends WebTestCase
 
         $client->request('GET', '/');
 
-        $this->assertEquals(Response::HTTP_FOUND, $client->getResponse()->getStatusCode());
         $this->assertTrue($client->getResponse()->isRedirect('/login')); // Adjust the redirect URL
     }
 

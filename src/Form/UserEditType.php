@@ -33,8 +33,7 @@ class UserEditType extends AbstractType
                     'class' => 'form-check'
                 ],
                 'choices' => [
-                            'Admin' => "ROLE_ADMIN",
-                            'User' => "ROLE_USER"
+                            'Admin' => "ROLE_ADMIN"
                         ],
                 'choice_attr' => [
                     'Admin' => ['class' => 'm-2'],

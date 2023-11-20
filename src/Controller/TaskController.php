@@ -51,6 +51,7 @@ class TaskController extends AbstractController
         $form->handleRequest($request);
 
         if ($user === null) {
+            $this->addFlash('danger', sprintf('Veuillez vous identifier'));
             return $this->redirectToRoute('app_login', [], Response::HTTP_SEE_OTHER);
         }
         //I check if I have a form and that it is valid
@@ -84,6 +85,16 @@ class TaskController extends AbstractController
         $taskId = $request->attributes->get('id');
         $task = $taskRepository->findTaskWithUser($taskId);
 
+        if ($task->getUser() !== null){
+            if ( $this->getUser()->getId() !== $task->getUser()->getId()) {
+                $this->addFlash('danger', sprintf('La tâche ' .$task->getTitle() .'ne pe pas etre modifier par vous'));
+                return $this->redirectToRoute('home', [], Response::HTTP_SEE_OTHER);
+            }
+        }
+        if ($task->getUser() === null && $this->getUser()->getRoles()[0] === "ROLE_USER") {
+            $this->addFlash('danger', sprintf('La tâche ' .$task->getTitle() .'ne pe pas etre modifier par vous'));
+            return $this->redirectToRoute('home', [], Response::HTTP_SEE_OTHER);
+        }
 
         // $this->denyAccessUnlessGranted('task_EDIT', $task);
         //I create my form for edit task
@@ -91,12 +102,13 @@ class TaskController extends AbstractController
         $user = $this->getUser();
         //the form request is processed
         $form->handleRequest($request);
-
+        // dd($task->getUser()->getId());
         if ($user === null) {
             return $this->redirectToRoute('app_login', [], Response::HTTP_SEE_OTHER);
         }
         //I check if I have a form and that it is valid
         if ($form->isSubmitted() && $form->isValid()) {
+
             $now = new DateTimeImmutable();
             $task->setUpdateAt($now);
             $task->setTitle(strtoupper($task->getTitle()));
@@ -124,14 +136,21 @@ class TaskController extends AbstractController
     public function toggleTaskAction(Task $task, EntityManagerInterface $em)
     {
         if ($this->getUser()->getId() === $task->getUser()->getId() || $this->getUser()->getRoles()[0] == "ROLE_ADMIN") {
+
+            if ($task->isIsDone() === true) {
+                $this->addFlash('danger', sprintf('La tâche %s n\'a pas été marquée comme faite.', $task->getTitle()));
+                $task->setIsDone(!$task->isIsDone());
+                $em->flush();
+                return $this->redirectToRoute('task_list');
+            }
             $task->setIsDone(!$task->isIsDone());
-            $em->flush($task);
+            $em->flush();
 
             $this->addFlash('success', sprintf('La tâche %s a bien été marquée comme faite.', $task->getTitle()));
 
             return $this->redirectToRoute('task_list');
         }
-        $this->addFlash('danger', sprintf('La tâche %s n\'a pas été marquée comme faite.', $task->getTitle()));
+        
 
         return $this->redirectToRoute('task_list');
     }

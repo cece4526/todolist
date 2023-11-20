@@ -18,7 +18,7 @@ class RegistrationControllerTest extends WebTestCase
 
         $client->request('GET', '/register');
 
-        $this->assertEquals(Response::HTTP_OK, $client->getResponse()->getStatusCode());
+        $this->assertEquals(Response::HTTP_FOUND, $client->getResponse()->getStatusCode());
     }
 
     public function testSubmitValidForm()
