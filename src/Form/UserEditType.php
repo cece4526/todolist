@@ -37,7 +37,6 @@ class UserEditType extends AbstractType
                         ],
                 'choice_attr' => [
                     'Admin' => ['class' => 'm-2'],
-                    'User' => ['class' => 'm-2'],
                 ],
                 'required' => true,
                 'multiple' => true,

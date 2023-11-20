@@ -28,8 +28,14 @@ class UserController extends AbstractController
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
+            
+            
+            // if ($form->getData()->getRoles()[0]) {
+            //     $userRepository->save($user, true);
+            //     return $this->redirectToRoute('user_list', [], Response::HTTP_SEE_OTHER);
+            // }
+            // $user->setRoles([]);
             $userRepository->save($user, true);
-
             return $this->redirectToRoute('user_list', [], Response::HTTP_SEE_OTHER);
         }
 
