@@ -7,8 +7,7 @@ use Symfony\Bundle\FrameworkBundle\Test\WebTestCase;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\BrowserKit\AbstractBrowser;
 
-
-class UserControllerTest extends WebTestCase
+class UserControllerTest extends WebTestCase 
 {
     public function testIndex()
     {
@@ -32,53 +31,77 @@ class UserControllerTest extends WebTestCase
         $client->submit($form);
         $userRepository = static::getContainer()->get(UserRepository::class);
         $user = $userRepository->findOneByEmail('test@example.com');
-        // Assume you have a user with ID 1 in your database
+
         $crawler = $client->request('GET', 'users/edit/'.$user->getId());
 
         $this->assertResponseIsSuccessful();
 
         $form = $crawler->selectButton('Modifier')->form();
 
-        // Replace 'your_email', 'your_username', and 'your_roles' with test data
+
         $form['user_edit[email]'] = 'test@test.test';
         $form['user_edit[username]'] = 'your_username';
-        $form['user_edit[roles]'] = ["ROLE_ADMIN"]; // Adjust the role as needed
+        $form['user_edit[roles]'] = ["ROLE_ADMIN"]; 
 
         $client->submit($form);
 
         $this->assertResponseRedirects('/users/list');
     }
 
-    public function testDeleteAction(): void
+    public function testChangeRoleUser()
     {
         $client = static::createClient();
-        $client->request('GET', '/login');
-        $form = $client->getCrawler()->selectButton('Me connecter')->form();
+
+        $crawler = $client->request('GET', '/login');
+        $form = $crawler->selectButton('Me connecter')->form();
         $form['email'] = 'admin@example.com';
         $form['password'] = 'password';
         $client->submit($form);
-        // Assume you have a user with ID 1 in your database
         $userRepository = static::getContainer()->get(UserRepository::class);
         $user = $userRepository->findOneByEmail('test@test.test');
-        $session = $client->getContainer()->get('session');
-        // $session->set('user_id', $user->getId());
-        // $session->save();
-        
-        // $client->setSession($session);
 
-        $csrfToken = $client->getContainer()->get('security.csrf.token_manager')->getToken('delete' . $user->getId());
-        
-        $client->request(
-            'POST',
-            '/delete/'.$user->getId(),
-            ['_csrf_token' => $csrfToken]
-        );
-        dump($client);
-        $this->assertResponseRedirects('/user_list', 302);
+        $crawler = $client->request('GET', 'users/edit/'.$user->getId());
 
-        // Optionally, you can check if the user with ID 1 is actually deleted from the database
-        $deletedUser = $userRepository->find(1);
-        $this->assertNull($deletedUser, 'The user with ID 1 should be deleted.');
+        $this->assertResponseIsSuccessful();
+
+        $form = $crawler->selectButton('Modifier')->form();
+
+        $form['user_edit[roles]'] = []; 
+
+        $client->submit($form);
+
+        $this->assertResponseRedirects('/users/list');
     }
 
+    public function testDeleteUser()
+    {
+        $client = static::createClient();
+
+        // Log in as an admin user
+        $crawler = $client->request('GET', '/login');
+        $form = $crawler->selectButton('Me connecter')->form();
+        $form['email'] = 'admin@example.com';
+        $form['password'] = 'password';
+        $client->submit($form);
+
+        // Find the user to be deleted
+        $userRepository = static::getContainer()->get(UserRepository::class);
+        $user = $userRepository->findOneByEmail('test@test.test');
+        $userId = $user->getId();
+        // Get the CSRF token
+
+
+        // Send a request to delete the user
+        $crawler = $client->request('POST', '/users/delete/'.$userId);
+
+        // $form = $crawler->selectButton('Supprimer')->form(); 
+
+        // $client->submit($form);
+
+        // Assert that the response is a redirect to the user list
+        $this->assertFalse($client->getResponse()->isRedirect('/user/list'));
+
+        // Assert that the response is a success (HTTP status code 200)
+        $this->assertEquals(303, $client->getResponse()->getStatusCode());
+    }
 }

@@ -19,6 +19,12 @@ class TaskControllerTest extends WebTestCase
         $client->request('GET', '/tasks/');
         $this->assertResponseIsSuccessful();
     }
+    public function testIndexNotLogged() 
+    {
+        $client = static::createClient();
+        $client->request('GET', '/tasks/');
+        $this->assertResponseRedirects('/login');
+    }
 
     public function testtaskFinished()
     {

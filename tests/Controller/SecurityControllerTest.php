@@ -23,9 +23,11 @@ class SecurityControllerTest extends WebTestCase
     {
         $client = static::createClient();
 
-        $userRepository = static::getContainer()->get(UserRepository::class);
-        $user = $userRepository->findOneByEmail('test@test.test');
-        $client->loginUser($user);
+        $crawler = $client->request('GET', '/login');
+        $form = $crawler->selectButton('Me connecter')->form();
+        $form['email'] = 'admin@example.com';
+        $form['password'] = 'password';
+        $client->submit($form);
 
         $client->request('GET', '/login');
 
